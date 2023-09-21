@@ -1,34 +1,115 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 【Digi−Angler 用】[Bun](https://bun.sh/) + [Next.js](https://nextjs.org/) + [TypeScript](https://www.typescriptlang.org/ja/) + [Tailwind CSS](https://tailwindcss.com/) テンプレート
 
-## Getting Started
+## プロジェクトのセットアップ
 
-First, run the development server:
+これは一般的な手順の概要であり、具体的なバージョンや設定に応じて調整が必要かもしれません。プロジェクトの要件に合わせてカスタマイズしてください。
+
+`bunx` は、Bun フレームワークの一部として提供されているユーティリティです。[`bunx create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) コマンドを使用して、Next.js、TypeScript、Tailwind CSS のプロジェクトを簡単にセットアップできます。以下はその手順です。
+
+1. プロジェクトディレクトリを作成し、bunx create-next-appコマンドを実行します。
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
+bunx create-next-app <プロジェクト名>
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. プロジェクトディレクトリに移動します。
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+cd <プロジェクト名>
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+3. 開発サーバーを起動します。
 
-## Learn More
+```bash
+bun run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+## ESLint + Prettier の導入
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+4. ESLint の各種必要なプラグインをインストールします。
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+```bash
+bun add -D @typescript-eslint/parser 
+```
 
-## Deploy on Vercel
+```bash
+bun add -D @typescript-eslint/eslint-plugin eslint-plugin-react eslint-config-airbnb eslint-config-airbnb-typescript
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+5. .eslintrc.json を以下に修正します。
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+```bash
+{
+  "env": {
+  "browser" : true,
+  "node" : true,
+  "es2022" : true
+  },
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "project": "./tsconfig.json",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "extends": [
+    "eslint:recommended",
+    "next/core-web-vitals",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:react/recommended",
+    "airbnb",
+    "airbnb-typescript"
+  ],
+  "plugins": ["@typescript-eslint", "react"],
+  "rules": {
+    "linebreak-style": ["error", "windows"],
+    "react/react-in-jsx-scope": "off",
+    "react/function-component-definition": [
+      2,
+      {
+        "namedComponents": "arrow-function",
+        "unnamedComponents": "arrow-function"
+      }
+    ],
+    "react/prop-types": "off"
+  }
+}
+```
+
+6. Prettier の各種必要なプラグインをインストールします。
+
+```bash
+bun add -D prettier eslint-config-prettier
+```
+
+7. .prettierrc.json をルートフォルダに追加します。
+
+```bash
+{
+  "endOfLine": "lf",
+  "semi": true,
+  "singleQuote": true,
+  "jsxSingleQuote": false,
+  "tabWidth": 2,
+  "trailingComma": "es5",
+  "printWidth": 60
+}
+```
+
+8. .prettierignore ファイルも作成します。
+
+```bash
+# next.js build output
+.next
+out
+# dotenv environment variables file (build for Zeit Now)
+.env
+.env.local
+# Dependency directories
+node_modules
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+```
